@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { supabase } from '@/lib/supabase'
 import { format, addMonths, subMonths, startOfMonth, endOfMonth, startOfWeek, endOfWeek, isSameMonth, isSameDay, addDays } from 'date-fns'
 import { ChevronLeft, ChevronRight, CheckCircle2, CalendarCheck } from 'lucide-react'
@@ -14,26 +14,20 @@ export default function Home() {
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
+  const rootRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const inIframe = window.self !== window.top
-    if (!inIframe) return
+    if (!inIframe || !rootRef.current) return
 
-    document.body.style.overflow = 'hidden'
-
+    const el = rootRef.current
     const sendHeight = () => {
-      window.parent.postMessage(
-        { type: 'resize', height: document.body.scrollHeight },
-        '*'
-      )
+      window.parent.postMessage({ type: 'resize', height: el.offsetHeight }, '*')
     }
     sendHeight()
     const ro = new ResizeObserver(sendHeight)
-    ro.observe(document.body)
-    return () => {
-      ro.disconnect()
-      document.body.style.overflow = ''
-    }
+    ro.observe(el)
+    return () => ro.disconnect()
   }, [])
 
   const nextMonth = () => setCurrentDate(addMonths(currentDate, 1))
@@ -105,7 +99,7 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col items-center py-12 px-4 font-sans text-gray-900">
+    <div ref={rootRef} className="min-h-screen bg-slate-50 flex flex-col items-center py-12 px-4 font-sans text-gray-900">
       
       <header className="mb-10 text-center space-y-2">
         <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">방문 예약 신청</h1>
