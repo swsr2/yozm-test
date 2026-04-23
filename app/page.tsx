@@ -104,7 +104,7 @@ export default function Home() {
           key={day.toString()}
           onClick={() => onDateClick(cloneDay)}
           className={`flex justify-center items-center cursor-pointer transition-all duration-200 rounded-xl text-sm font-medium
-            py-1 lg:py-4
+            py-3 lg:py-4
             ${!isSameMonth(day, monthStart) ? 'text-gray-300 pointer-events-none' : 'hover:bg-blue-50 text-gray-700'}
             ${isSameDay(day, selectedDate || new Date(0)) ? 'bg-blue-600 !text-white shadow-md hover:bg-blue-700' : ''}
           `}
@@ -222,14 +222,21 @@ export default function Home() {
 
         {mobileStep === 'calendar' && CalendarBlock}
 
-        {mobileStep === 'form' && (
-          <div>
-            <button
-              onClick={() => setMobileStep('calendar')}
-              className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mb-3 transition"
-            >
-              <ArrowLeft size={16} /> 날짜 다시 선택
-            </button>
+        {mobileStep === 'form' && selectedDate && (
+          <div className="flex flex-col gap-3">
+            {/* 날짜 배너 */}
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-6 text-white text-center">
+              <p className="text-blue-200 text-sm mb-1">선택한 방문 날짜</p>
+              <p className="text-4xl font-extrabold tracking-tight">{format(selectedDate, 'dd')}</p>
+              <p className="text-lg font-semibold mt-0.5">{format(selectedDate, 'yyyy년 MM월')}</p>
+              <button
+                onClick={() => setMobileStep('calendar')}
+                className="mt-3 flex items-center gap-1 text-blue-200 text-xs mx-auto hover:text-white transition"
+              >
+                <ArrowLeft size={13} /> 날짜 다시 선택
+              </button>
+            </div>
+            {/* 폼 */}
             {FormBlock}
           </div>
         )}
