@@ -20,6 +20,9 @@ export default function Home() {
     const inIframe = window.self !== window.top
     if (!inIframe || !rootRef.current) return
 
+    document.body.style.overflow = 'hidden'
+    document.documentElement.style.overflow = 'hidden'
+
     const el = rootRef.current
     const sendHeight = () => {
       window.parent.postMessage({ type: 'resize', height: el.offsetHeight }, '*')
@@ -27,7 +30,11 @@ export default function Home() {
     sendHeight()
     const ro = new ResizeObserver(sendHeight)
     ro.observe(el)
-    return () => ro.disconnect()
+    return () => {
+      ro.disconnect()
+      document.body.style.overflow = ''
+      document.documentElement.style.overflow = ''
+    }
   }, [])
 
   const nextMonth = () => setCurrentDate(addMonths(currentDate, 1))
