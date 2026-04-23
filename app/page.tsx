@@ -90,7 +90,7 @@ export default function Home() {
           key={day.toString()}
           onClick={() => onDateClick(cloneDay)}
           className={`flex justify-center items-center cursor-pointer transition-all duration-200 rounded-xl text-sm font-medium
-            py-2 lg:py-4
+            py-1 lg:py-4
             ${!isSameMonth(day, monthStart) ? 'text-gray-300 pointer-events-none' : 'hover:bg-blue-50 text-gray-700'}
             ${isSameDay(day, selectedDate || new Date(0)) ? 'bg-blue-600 !text-white shadow-md hover:bg-blue-700' : ''}
           `}
@@ -105,9 +105,9 @@ export default function Home() {
   }
 
   const CalendarBlock = (
-    <div className="bg-white p-4 lg:p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg lg:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+    <div className="bg-white p-3 lg:p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100">
+      <div className="flex justify-between items-center mb-2">
+        <h2 className="text-base lg:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
           {format(currentDate, 'yyyy년 MM월')}
         </h2>
         <div className="flex space-x-1">
@@ -127,17 +127,17 @@ export default function Home() {
   )
 
   const FormBlock = (
-    <div className="bg-white p-4 lg:p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col">
+    <div className="bg-white p-3 lg:p-8 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col">
       {selectedDate && (
-        <div className="mb-4">
-          <div className="inline-block px-3 py-1 bg-blue-50 text-blue-700 text-sm font-semibold rounded-full mb-2">
+        <div className="mb-3">
+          <div className="inline-block px-3 py-1 bg-blue-50 text-blue-700 text-xs font-semibold rounded-full mb-1">
             {format(selectedDate, 'yyyy년 MM월 dd일')} 선택됨
           </div>
-          <h3 className="text-xl font-bold text-gray-800">방문 예약 정보 입력</h3>
-          <p className="text-gray-500 text-sm mt-1">이름과 이메일을 남겨주시면 관리자 승인 후 안내해 드립니다.</p>
+          <h3 className="text-lg font-bold text-gray-800">방문 예약 정보 입력</h3>
+          <p className="text-gray-500 text-xs mt-0.5">이름과 이메일을 남겨주시면 관리자 승인 후 안내해 드립니다.</p>
         </div>
       )}
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-3">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">이름</label>
           <input
@@ -145,7 +145,7 @@ export default function Home() {
             required
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-slate-50 focus:bg-white"
+            className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-slate-50 focus:bg-white text-sm"
             placeholder="홍길동"
           />
         </div>
@@ -156,7 +156,7 @@ export default function Home() {
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-slate-50 focus:bg-white"
+            className="w-full px-3 py-2 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-slate-50 focus:bg-white text-sm"
             placeholder="example@email.com"
           />
         </div>
@@ -164,7 +164,7 @@ export default function Home() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/30 transition disabled:opacity-70 disabled:pointer-events-none"
+          className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-semibold shadow-lg shadow-blue-500/30 transition disabled:opacity-70 disabled:pointer-events-none"
         >
           {loading ? '신청 중...' : '예약 신청하기'}
         </button>
@@ -192,15 +192,15 @@ export default function Home() {
     <div ref={rootRef} className="bg-slate-50 font-sans text-gray-900">
 
       {/* 모바일 레이아웃 */}
-      <div className="lg:hidden flex flex-col px-4 py-6 min-h-screen">
-        <header className="mb-4 text-center">
-          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">방문 예약 신청</h1>
-          <p className="text-slate-500 text-sm mt-1">날짜를 선택하고 정보를 남겨주세요.</p>
+      <div className="lg:hidden flex flex-col px-3 py-3">
+        <header className="mb-2 text-center">
+          <h1 className="text-xl font-extrabold tracking-tight text-slate-900">방문 예약 신청</h1>
+          <p className="text-slate-500 text-xs mt-0.5">날짜를 선택하고 정보를 남겨주세요.</p>
         </header>
 
         {/* 스텝 인디케이터 */}
         {mobileStep !== 'success' && (
-          <div className="flex items-center justify-center gap-2 mb-4">
+          <div className="flex items-center justify-center gap-2 mb-2">
             <div className={`w-2 h-2 rounded-full transition-all ${mobileStep === 'calendar' ? 'bg-blue-600 w-4' : 'bg-blue-200'}`} />
             <div className={`w-2 h-2 rounded-full transition-all ${mobileStep === 'form' ? 'bg-blue-600 w-4' : 'bg-blue-200'}`} />
           </div>
