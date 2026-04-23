@@ -20,21 +20,19 @@ export default function Home() {
     if (!inIframe) return
 
     document.body.style.overflow = 'hidden'
-    document.documentElement.style.overflow = 'hidden'
 
     const sendHeight = () => {
       window.parent.postMessage(
-        { type: 'resize', height: document.documentElement.scrollHeight },
+        { type: 'resize', height: document.body.scrollHeight },
         '*'
       )
     }
     sendHeight()
     const ro = new ResizeObserver(sendHeight)
-    ro.observe(document.documentElement)
+    ro.observe(document.body)
     return () => {
       ro.disconnect()
       document.body.style.overflow = ''
-      document.documentElement.style.overflow = ''
     }
   }, [])
 
