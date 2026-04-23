@@ -19,6 +19,8 @@ export default function Home() {
     const inIframe = window.self !== window.top
     if (!inIframe) return
 
+    document.body.style.overflow = 'hidden'
+
     const sendHeight = () => {
       window.parent.postMessage(
         { type: 'resize', height: document.body.scrollHeight },
@@ -28,7 +30,10 @@ export default function Home() {
     sendHeight()
     const ro = new ResizeObserver(sendHeight)
     ro.observe(document.body)
-    return () => ro.disconnect()
+    return () => {
+      ro.disconnect()
+      document.body.style.overflow = ''
+    }
   }, [])
 
   const nextMonth = () => setCurrentDate(addMonths(currentDate, 1))
