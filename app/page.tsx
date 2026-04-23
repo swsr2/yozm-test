@@ -18,18 +18,19 @@ export default function Home() {
 
   useEffect(() => {
     const inIframe = window.self !== window.top
-    if (!inIframe || !rootRef.current) return
+    if (!inIframe) return
 
     document.body.style.overflow = 'hidden'
-    document.documentElement.style.overflow = 'hidden'
 
-    const el = rootRef.current
     const sendHeight = () => {
-      window.parent.postMessage({ type: 'resize', height: el.offsetHeight }, '*')
+      window.parent.postMessage(
+        { type: 'resize', height: document.documentElement.scrollHeight },
+        '*'
+      )
     }
+    window.addEventListener('load', sendHeight)
+    window.addEventListener('resize', sendHeight)
     sendHeight()
-    const ro = new ResizeObserver(sendHeight)
-    ro.observe(el)
 
     let startY = 0
     const onTouchStart = (e: TouchEvent) => { startY = e.touches[0].clientY }
@@ -42,11 +43,11 @@ export default function Home() {
     document.addEventListener('touchmove', onTouchMove, { passive: true })
 
     return () => {
-      ro.disconnect()
+      window.removeEventListener('load', sendHeight)
+      window.removeEventListener('resize', sendHeight)
       document.removeEventListener('touchstart', onTouchStart)
       document.removeEventListener('touchmove', onTouchMove)
       document.body.style.overflow = ''
-      document.documentElement.style.overflow = ''
     }
   }, [])
 
@@ -59,7 +60,7 @@ export default function Home() {
     setMobileStep('form')
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!selectedDate) return
     setLoading(true)
