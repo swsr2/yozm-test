@@ -19,8 +19,6 @@ export default function Home() {
     const inIframe = window.self !== window.top
     if (!inIframe) return
 
-    document.body.style.overflow = 'hidden'
-
     const sendHeight = () => {
       window.parent.postMessage(
         { type: 'resize', height: document.body.scrollHeight },
@@ -30,29 +28,7 @@ export default function Home() {
     sendHeight()
     const ro = new ResizeObserver(sendHeight)
     ro.observe(document.body)
-    return () => {
-      ro.disconnect()
-      document.body.style.overflow = ''
-    }
-  }, [])
-
-  useEffect(() => {
-    const inIframe = window.self !== window.top
-    if (!inIframe) return
-
-    let startY = 0
-    const onTouchStart = (e: TouchEvent) => { startY = e.touches[0].clientY }
-    const onTouchMove = (e: TouchEvent) => {
-      const deltaY = startY - e.touches[0].clientY
-      window.parent.postMessage({ type: 'scroll', deltaY }, '*')
-      startY = e.touches[0].clientY
-    }
-    document.addEventListener('touchstart', onTouchStart, { passive: true })
-    document.addEventListener('touchmove', onTouchMove, { passive: true })
-    return () => {
-      document.removeEventListener('touchstart', onTouchStart)
-      document.removeEventListener('touchmove', onTouchMove)
-    }
+    return () => ro.disconnect()
   }, [])
 
   const nextMonth = () => setCurrentDate(addMonths(currentDate, 1))
