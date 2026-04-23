@@ -30,8 +30,21 @@ export default function Home() {
     sendHeight()
     const ro = new ResizeObserver(sendHeight)
     ro.observe(el)
+
+    let startY = 0
+    const onTouchStart = (e: TouchEvent) => { startY = e.touches[0].clientY }
+    const onTouchMove = (e: TouchEvent) => {
+      const deltaY = startY - e.touches[0].clientY
+      window.parent.postMessage({ type: 'scroll', deltaY }, '*')
+      startY = e.touches[0].clientY
+    }
+    document.addEventListener('touchstart', onTouchStart, { passive: true })
+    document.addEventListener('touchmove', onTouchMove, { passive: true })
+
     return () => {
       ro.disconnect()
+      document.removeEventListener('touchstart', onTouchStart)
+      document.removeEventListener('touchmove', onTouchMove)
       document.body.style.overflow = ''
       document.documentElement.style.overflow = ''
     }
