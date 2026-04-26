@@ -248,10 +248,9 @@ export default function Home() {
         {mobileStep === 'form' && selectedDate && (
           <div className="flex flex-col gap-3">
             {/* 날짜 배너 */}
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-6 text-white text-center">
-              <p className="text-blue-200 text-sm mb-1">선택한 방문 날짜</p>
-              <p className="text-lg font-semibold mt-0.5">{format(selectedDate, 'yyyy년 MM월')}</p>
-              <p className="text-4xl font-extrabold tracking-tight">{format(selectedDate, 'dd')}</p>
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-5 text-white text-center shadow-md">
+              <p className="text-blue-200 text-xs mb-1">선택한 방문 날짜</p>
+              <p className="text-2xl font-bold tracking-tight">{format(selectedDate, 'yyyy년 MM월 dd일')}</p>
               <button
                 onClick={() => setMobileStep('calendar')}
                 className="mt-3 flex items-center gap-1 text-blue-200 text-xs mx-auto hover:text-white transition"
