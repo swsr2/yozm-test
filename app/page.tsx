@@ -9,6 +9,7 @@ export default function Home() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [mobileStep, setMobileStep] = useState<'calendar' | 'form' | 'success'>('calendar')
+  const [selectedLocation, setSelectedLocation] = useState('')
 
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -55,6 +56,10 @@ export default function Home() {
   const prevMonth = () => setCurrentDate(subMonths(currentDate, 1))
 
   const onDateClick = (day: Date) => {
+    if (!selectedLocation) {
+      alert('지점을 먼저 선택해주세요.')
+      return
+    }
     setSelectedDate(day)
     setError('')
     setMobileStep('form')
@@ -71,7 +76,8 @@ export default function Home() {
       .insert({
         name,
         email,
-        date: format(selectedDate, 'yyyy-MM-dd')
+        date: format(selectedDate, 'yyyy-MM-dd'),
+        location: selectedLocation,
       })
 
     setLoading(false)
@@ -206,17 +212,34 @@ export default function Home() {
     <div ref={rootRef} className="bg-slate-50 font-sans text-gray-900">
 
       {/* 모바일 레이아웃 */}
-      <div className="lg:hidden flex flex-col px-3 py-3">
-        <header className="mb-2 text-center">
-          <h1 className="text-xl font-extrabold tracking-tight text-slate-900">방문 예약 신청</h1>
-          <p className="text-slate-500 text-xs mt-0.5">날짜를 선택하고 정보를 남겨주세요.</p>
+      <div className="lg:hidden flex flex-col px-4 py-8">
+        <header className="mb-6 text-center">
+          <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">방문 예약 신청</h1>
+          <p className="text-slate-500 text-sm mt-1.5">날짜를 선택하고 정보를 남겨주세요.</p>
         </header>
 
         {/* 스텝 인디케이터 */}
         {mobileStep !== 'success' && (
-          <div className="flex items-center justify-center gap-2 mb-2">
+          <div className="flex items-center justify-center gap-2 mb-6">
             <div className={`w-2 h-2 rounded-full transition-all ${mobileStep === 'calendar' ? 'bg-blue-600 w-4' : 'bg-blue-200'}`} />
             <div className={`w-2 h-2 rounded-full transition-all ${mobileStep === 'form' ? 'bg-blue-600 w-4' : 'bg-blue-200'}`} />
+          </div>
+        )}
+
+        {mobileStep !== 'success' && (
+          <div className="w-full max-w-[200px] mx-auto mb-6">
+            <select
+              value={selectedLocation}
+              onChange={(e) => setSelectedLocation(e.target.value)}
+              className="w-full px-5 py-2.5 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white text-gray-700 shadow-sm text-center appearance-none cursor-pointer text-sm font-medium"
+              style={{ backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`, backgroundPosition: `right 1rem center`, backgroundRepeat: `no-repeat`, backgroundSize: `1.2em 1.2em`, textAlignLast: `center` }}
+            >
+              <option value="" disabled className="text-left">지점을 선택해주세요</option>
+              <option value="청담" className="text-left">청담</option>
+              <option value="종로" className="text-left">종로</option>
+              <option value="부산" className="text-left">부산</option>
+              <option value="대구" className="text-left">대구</option>
+            </select>
           </div>
         )}
 
@@ -227,8 +250,8 @@ export default function Home() {
             {/* 날짜 배너 */}
             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-3xl p-6 text-white text-center">
               <p className="text-blue-200 text-sm mb-1">선택한 방문 날짜</p>
-              <p className="text-4xl font-extrabold tracking-tight">{format(selectedDate, 'dd')}</p>
               <p className="text-lg font-semibold mt-0.5">{format(selectedDate, 'yyyy년 MM월')}</p>
+              <p className="text-4xl font-extrabold tracking-tight">{format(selectedDate, 'dd')}</p>
               <button
                 onClick={() => setMobileStep('calendar')}
                 className="mt-3 flex items-center gap-1 text-blue-200 text-xs mx-auto hover:text-white transition"
@@ -245,11 +268,26 @@ export default function Home() {
       </div>
 
       {/* 데스크탑 레이아웃 */}
-      <div className="hidden lg:flex flex-col items-center py-12 px-4">
+      <div className="hidden lg:flex flex-col items-center py-12 px-4 mt-4">
         <header className="mb-10 text-center space-y-2">
           <h1 className="text-4xl font-extrabold tracking-tight text-slate-900">방문 예약 신청</h1>
           <p className="text-slate-500">원하시는 날짜를 선택하고 정보를 남겨주시면 연락드리겠습니다.</p>
         </header>
+
+        <div className="w-full max-w-xs mx-auto mb-10">
+          <select
+            value={selectedLocation}
+            onChange={(e) => setSelectedLocation(e.target.value)}
+            className="w-full px-6 py-3 rounded-2xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-white text-gray-700 shadow-sm text-center appearance-none cursor-pointer text-lg font-medium"
+            style={{ backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e")`, backgroundPosition: `right 1rem center`, backgroundRepeat: `no-repeat`, backgroundSize: `1.5em 1.5em`, textAlignLast: `center` }}
+          >
+            <option value="" disabled className="text-left">지점을 선택해주세요</option>
+            <option value="청담" className="text-left">청담</option>
+            <option value="종로" className="text-left">종로</option>
+            <option value="부산" className="text-left">부산</option>
+            <option value="대구" className="text-left">대구</option>
+          </select>
+        </div>
 
         <div className="max-w-4xl w-full grid grid-cols-2 gap-8 items-start">
           {CalendarBlock}
@@ -264,13 +302,7 @@ export default function Home() {
             )}
           </div>
         </div>
-
-        <footer className="mt-16 text-center text-sm text-slate-400">
-          <p>&copy; 2024 방문 예약 시스템. All rights reserved.</p>
-          <a href="/admin" className="text-blue-500 hover:underline mt-2 inline-block">관리자 페이지</a>
-        </footer>
       </div>
-
     </div>
   )
 }
