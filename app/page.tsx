@@ -71,6 +71,13 @@ export default function Home() {
     setLoading(true)
     setError('')
 
+    if (typeof window !== 'undefined') {
+      ;(window as any).dataLayer = (window as any).dataLayer || [];
+      ;(window as any).dataLayer.push({
+        event: 'acredo_test'
+      });
+    }
+
     const { error: dbError } = await supabase
       .from('appointments')
       .insert({
