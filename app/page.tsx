@@ -71,13 +71,6 @@ export default function Home() {
     setLoading(true)
     setError('')
 
-    if (typeof window !== 'undefined') {
-      ;(window as any).dataLayer = (window as any).dataLayer || [];
-      ;(window as any).dataLayer.push({
-        event: 'acredo_test'
-      });
-    }
-
     const { error: dbError } = await supabase
       .from('appointments')
       .insert({
@@ -92,6 +85,12 @@ export default function Home() {
       setError('예약 신청 중 오류가 발생했습니다.')
       console.error(dbError)
     } else {
+      if (typeof window !== 'undefined') {
+        ; (window as any).dataLayer = (window as any).dataLayer || [];
+        ; (window as any).dataLayer.push({
+          event: 'acredo_test'
+        });
+      }
       setMobileStep('success')
       setName('')
       setEmail('')
